@@ -1,15 +1,36 @@
-Backend de ColeActivos (Versión 3 - Fetch HTML)
+Backend de ColeActivos (v6 - API de Boostr)
 
-Este backend usa Express y fetch nativo de Node.js para verificar patentes.
+Este backend sirve como un proxy seguro para verificar si una patente de vehículo chileno corresponde a transporte público (colectivo).
 
-Se eliminó Puppeteer porque es inestable, lento y consume demasiados recursos para un servicio como Render.
+Utiliza la API de boostr.cl como fuente de datos, ya que los intentos de scraping al MTT fueron bloqueados.
 
-Estrategia
+Endpoint
 
-El sitio apps.mtt.cl no usa una API JSON (Fetch/XHR) moderna. En su lugar, usa un envío de formulario HTML simple que recarga la página en una nueva URL:
+GET /api/verificar-patente?patente=ABCD12
+Verifica una patente.
 
-https://apps.mtt.cl/consultaweb/consulta?patente=PATENTE_AQUI
+Respuesta exitosa: { "ok": true, "tipo": "colectivo", "esTransportePublico": true, ... }
 
-Este backend llama directamente a esa URL, recibe la respuesta (que es una página HTML completa), la convierte a texto y busca las palabras clave "colectivo" o "taxi" dentro de ese texto.
+Respuesta de error: { "ok": false, "tipo": "error", "detalle": "...", ... }
 
-Esta es la solución más rápida, ligera y estable para desplegar en Render.
+Configuración de Despliegue en Render
+
+Para que este servidor funcione, requiere DOS variables de entorno:
+
+NODE_VERSION
+
+Key: NODE_VERSION
+
+Value: 18.17.0 (o cualquier versión superior a 18)
+
+Razón: El código usa import y fetch nativos.
+
+BOOSTR_API_KEY
+
+Key: BOOSTR_API_KEY
+
+Value: (Tu API Key secreta obtenida de boostr.cl)
+
+Razón: Necesaria para autenticarse con la API de Boostr.
+
+IMPORTANTE: La variable NODE_TLS_REJECT_UNAUTHORIZED ya NO es necesaria y debe ser eliminada por seguridad.
