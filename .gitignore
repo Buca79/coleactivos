@@ -1,21 +1,12 @@
-Ignorar dependencias de Node
+Node.js
 
 node_modules/
-
-Logs y archivos de debug
-
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-
-Directorios de build
-
 dist/
-
-Archivos de variables de entorno
-
 .env
 
-Archivos de sistema operativo (macOS)
+macOS
 
 .DS_Store
